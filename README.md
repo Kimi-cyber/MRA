@@ -1,6 +1,7 @@
 # MRA: Autoregressive Generation-Based Real-Time Production Forecasting with Variable Input Length
 
-Masked Recurrent Alignment (MRA) is a novel approach designed for continuous prediction using limited production history. It leverages autoregressive generation (AG) for sequence-to-sequence (seq2seq) generation, while its masking capability enables the handling of sequences with variable input lengths.
+## Citation
+If you use this code in your research, please cite the following paper: Xu, Z., & Leung, J. Y. (2024). Dynamic Real-Time Production Forecasting Model for Complex Subsurface Flow Systems with Variable-Length Input Sequences
 
 ## Introduction
 
