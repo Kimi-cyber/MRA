@@ -5,7 +5,7 @@ If you use this code in your research, please cite the following paper: Xu, Z., 
 
 ## Introduction
 
-Forecasting production time-series for newly drilled wells or those with scant flow and pressure historical data is a formidable challenge. This challenge is compounded by the complexities and uncertainties inherent in fractured subsurface systems. Traditional models, which often rely on static features for prediction, fall short as they cannot incorporate the progressively richer insights offered by ongoing production data. To overcome these limitations, we propose the Masked Recurrent Alignment (MRA) methodology, which is based on Autoregressive Generation (AG). MRA utilizes both padding and masking to ensure that all data, regardless of the sequence length, is utilized in the training process, thus addressing the issue of effectively integrating production stream data into the forecasting model.
+Forecasting production time-series for newly drilled wells or those with scant historical production data in a shale gas reservoir is a formidable challenge. This challenge is compounded by the complexities and uncertainties inherent in fractured subsurface systems. Traditional models, which often rely on static features for prediction, fall short as they cannot incorporate the progressively richer insights offered by ongoing production data. To overcome these limitations, we propose the Masked Recurrent Alignment (MRA) methodology, which is based on Autoregressive Generation (AG). MRA utilizes both padding and masking to ensure that all data, regardless of the sequence length, is utilized in the training process, thus addressing the issue of effectively integrating production stream data into the forecasting model.
 
 
 ## Methodology
@@ -18,7 +18,7 @@ MRA employs an encoder-decoder architecture. The encoder encodes historical prod
 
 MRA's design allows for the accommodation of time series of varying lengths within a specified maximum length, enhancing its flexibility. The training set is segmented into distinct time-series segments of lengths ranging from 0 to `T-1`, enlarging the training set to a size of `V×T`, where `V` represents the number of wells. Uniformity in computation is achieved by padding these segments to a uniform length, while masking ensures that padded values are disregarded, thus maintaining data integrity and consistency during training.
 
-The forecasting process initiates by employing a static feature to predict the first production data point (`x1`). The model then iteratively predicts each subsequent data point (`x2`, `x3`, ..., `xT`) by leveraging the series of previously predicted points (`x1, x2, ..., xn-1`). This methodology generates `T` training pairs for each sequence, cumulatively resulting in `VxT` pairs across the training dataset, where `V` represents the total number of wells involved in the study.
+The forecasting process is initiated by employing a static feature to predict the first production data point (`x1`). The model then iteratively predicts each subsequent data point (`x2`, `x3`, ..., `xT`) by leveraging the series of previously predicted points (`x1, x2, ..., xn-1`). This methodology generates `T` training pairs for each sequence, cumulatively resulting in `VxT` pairs across the training dataset, where `V` represents the total number of wells involved in the study.
 
 ![image](https://github.com/ziming-zx/MRA/assets/55851734/d197187c-2645-4a62-b116-2e8b198f2802)
 
@@ -26,9 +26,9 @@ The forecasting process initiates by employing a static feature to predict the f
 
 The model's input and output structures are designed to accommodate the dynamic nature of the forecasting task:
 
-- **Input Shape:** The input to the model is formatted as `[VxT, T, feature_number]`, where `V` is the number of wells, `T` is the number of time steps in the sequence, and `feature_number` represents the number of features (static and dynamic) included for each time step.
+- **Input Shape:** The input to the model is formatted as `[VxT, T, feature_number]`, where `V` is the number of wells, `T` is the number of time steps in the sequence, and `feature_number` represents the number of features (static, dynamic and autoregressive term) included for each time step.
 
-- **Output Shape:** The output from the model mirrors the input structure, formatted as `[VxT, T, feature_number]`. This reflects the model's capacity to predict a sequence of production data points for each well, with each prediction corresponding to a specific time step in the sequence.
+- **Output Shape:** The model predicts for `t+1`th timestep value. The output is formatted as `[VxT, 1, 1]`.
 
 
 ## Experiment Setup
