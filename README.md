@@ -26,7 +26,9 @@ The forecasting process is initiated by employing a static feature to predict th
 
 The model's input and output structures are designed to accommodate the dynamic nature of the forecasting task:
 
-- **Input Shape:** The input to the model is formatted as `[VxT, T, feature_number]`, where `V` is the number of wells, `T` is the number of time steps in the sequence, and `feature_number` represents the number of features (static, dynamic and autoregressive term) included for each time step.
+- **Encoder Input Shape:** The input to the model is formatted as `[VxT, T-1, feature_number]`, where `V` is the number of wells, `T` is the number of time steps in the sequence, and `feature_number` represents the number of features (static, dynamic and autoregressive term) included for each time step.
+
+- **Decoder Input Shape:** The input to the model is formatted as `[VxT, T-1, feature_number]`. Here, `feature_number` represents the number of features (static, dynamic) included for each time step.
 
 - **Output Shape:** The model predicts for `t+1`th timestep value. The output is formatted as `[VxT, 1, 1]`.
 
