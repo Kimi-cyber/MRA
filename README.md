@@ -4,21 +4,30 @@ Masked Recurrent Alignment (MRA) is a novel approach designed for continuous pre
 
 ## Introduction
 
-Forecasting production time-series for newly drilled wells or those with scant flow and pressure historical data is a formidable challenge. This challenge is compounded by the complexities and uncertainties inherent in fractured subsurface systems. Traditional models, which often rely on static features for prediction, fall short as they cannot incorporate the progressively richer insights offered by ongoing production data. To overcome these limitations, we propose the Masked Recurrent Alignment (MRA) methodology, which is based on autoregressive generation (AG). MRA utilizes both padding and masking to ensure that all data, regardless of the sequence length, is utilized in the training process, thus addressing the issue of effectively integrating production stream data into the forecasting model.
+Forecasting production time-series for newly drilled wells or those with scant flow and pressure historical data is a formidable challenge. This challenge is compounded by the complexities and uncertainties inherent in fractured subsurface systems. Traditional models, which often rely on static features for prediction, fall short as they cannot incorporate the progressively richer insights offered by ongoing production data. To overcome these limitations, we propose the Masked Recurrent Alignment (MRA) methodology, which is based on Autoregressive Generation (AG). MRA utilizes both padding and masking to ensure that all data, regardless of the sequence length, is utilized in the training process, thus addressing the issue of effectively integrating production stream data into the forecasting model.
+![image](https://github.com/ziming-zx/MRA/assets/55851734/d197187c-2645-4a62-b116-2e8b198f2802)
+
 
 ## Methodology
 
 ### Model Structure
 
-MRA is modeled on the structure of the Transformer and employs an encoder-decoder architecture. The encoder encodes historical production information into a vector that initializes the decoder’s hidden state. The decoder then uses this state, combined with current step information, to predict future production data. A key feature of MRA is its ability to iteratively append output to input, facilitated by setting the embedding dimension (sliding window) `m` to `T-1`, and fixing the delay (lag) `d` at 1.
+MRA employs an encoder-decoder architecture. The encoder encodes historical production information into a vector that initializes the decoder’s hidden state. The decoder then uses this state, combined with current step information, to predict future production data. A key feature of MRA is its ability to iteratively append output to input, facilitated by setting the embedding dimension (sliding window) `m` to `T-1`, and fixing the delay (lag) `d` at 1.
 
 ### Segmentation
 
 MRA's design allows for the accommodation of time series of varying lengths within a specified maximum length, enhancing its flexibility. The training set is segmented into distinct time-series segments of lengths ranging from 0 to `T-1`, enlarging the training set to a size of `V×T`, where `V` represents the number of wells. Uniformity in computation is achieved by padding these segments to a uniform length, while masking ensures that padded values are disregarded, thus maintaining data integrity and consistency during training.
 
-### Input/Output Shape
+The forecasting process initiates by employing a static feature to predict the first production data point (`x1`). The model then iteratively predicts each subsequent data point (`x2`, `x3`, ..., `xT`) by leveraging the series of previously predicted points (`x1, x2, ..., xn-1`). This methodology generates `T` training pairs for each sequence, cumulatively resulting in `VxT` pairs across the training dataset, where `V` represents the total number of wells involved in the study.
 
-The model starts by using a static feature to predict the first production data point (`x1`). Subsequent points (`x2`, `x3`, ..., `xT`) are predicted by iteratively combining the previously predicted points (`x1, x2, ..., xn-1`). This generates `T` training pairs for a sequence, resulting in `VxT` pairs for the training dataset, where `V` is the number of wells.
+### Input and Output Shape
+
+The model's input and output structures are designed to accommodate the dynamic nature of the forecasting task:
+
+- **Input Shape:** The input to the model is formatted as `[VxT, T, feature_number]`, where `V` is the number of wells, `T` is the number of time steps in the sequence, and `feature_number` represents the number of features (static and dynamic) included for each time step.
+
+- **Output Shape:** The output from the model mirrors the input structure, formatted as `[VxT, T, feature_number]`. This reflects the model's capacity to predict a sequence of production data points for each well, with each prediction corresponding to a specific time step in the sequence.
+
 
 ## Experiment Setup
 
