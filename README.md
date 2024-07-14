@@ -48,3 +48,6 @@ The GRU-MRA model's prediction results are detailed, showcasing the performance 
 
 
 Empirical evidence from this study highlights the superior performance of the proposed models, offering significant advancements in the field of real-time production forecasting.
+
+---------------
+Continue reading about the Non-Autoregressive Generation Real-Time updating method: [MED](https://github.com/ziming-zx/MED)
